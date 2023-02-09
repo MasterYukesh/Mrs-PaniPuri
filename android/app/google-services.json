@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "616901844995",
+    "project_id": "mrspanipuri",
+    "storage_bucket": "mrspanipuri.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:616901844995:android:1df7e5f01d7d0e1569ae36",
+        "android_client_info": {
+          "package_name": "com.example.mrs_panipuri"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "616901844995-jbosclc19fo2qu8gujelk9pb9bpsfcao.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3JmsZH_lSbApjlIi03RcJY0y8cnFkicE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "616901844995-jbosclc19fo2qu8gujelk9pb9bpsfcao.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
