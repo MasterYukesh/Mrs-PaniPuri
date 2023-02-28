@@ -2,12 +2,14 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:mrs_panipuri/model/bill.dart';
 import 'package:mrs_panipuri/model/firebasehelper.dart';
+import 'package:mrs_panipuri/screens/printpage.dart';
 import '../model/product.dart';
 import 'package:flutter/services.dart';
 
 class BillPage extends StatefulWidget {
   final Bill? bill;
-  const BillPage({Key? key, this.bill}) : super(key: key);
+  final String? index;
+  const BillPage({Key? key, this.bill, this.index}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -31,7 +33,7 @@ class _BillPage extends State<BillPage> {
   bool billgenerated = false;
   bool enableUpdate = false; // To enable and disable the update option
   String mop = ""; // mode of payment
-
+  String? title = "Bill Page";
   List<Product> prodlist = [];
   Product?
       currentProduct; // used to store quantity of the current product being added/updated
@@ -39,6 +41,7 @@ class _BillPage extends State<BillPage> {
 
   Product? productValue; // stores the product value for the dropdown menu
   TextEditingController quantity = TextEditingController();
+  List<Map<String, dynamic>> jsondata = [];
 
   @override
   void initState() {
@@ -49,6 +52,7 @@ class _BillPage extends State<BillPage> {
       mop = currentbill.paymentMode;
       billgenerated = true;
       enableUpdate = false;
+      title = widget.index;
       toUpdate =
           false; // since we already have a bill no need to display the update features
       for (var item in productList) {
@@ -86,10 +90,10 @@ class _BillPage extends State<BillPage> {
       child: Scaffold(
         backgroundColor: Colors.teal,
         appBar: AppBar(
-         backgroundColor: Colors.transparent, 
-          title: const Text(
-            'Bill Page',
-            style: TextStyle(fontWeight: FontWeight.bold),
+          backgroundColor: Colors.transparent,
+          title: Text(
+            title!,
+            style: const TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
         body: GestureDetector(
@@ -105,7 +109,7 @@ class _BillPage extends State<BillPage> {
               Column(
                 children: [
                   const SizedBox(
-                    height: 50,
+                    height: 30,
                   ),
                   Row(
                     mainAxisSize: MainAxisSize.min,
@@ -145,7 +149,7 @@ class _BillPage extends State<BillPage> {
                     ],
                   ),
                   const SizedBox(
-                    height: 50,
+                    height: 15,
                   ),
                   Row(
                     children: [
@@ -252,12 +256,9 @@ class _BillPage extends State<BillPage> {
                     ],
                   ),
                   const SizedBox(
-                    height: 50,
+                    height: 20,
                   )
                 ],
-              ),
-              const SizedBox(
-                height: 20,
               ),
               Center(
                   child: Visibility(
@@ -276,8 +277,7 @@ class _BillPage extends State<BillPage> {
                         title: Text(element.name),
                         subtitle: Text(
                           "Q : ${element.quantity.toString()}\n \u20B9 ${(element.price * element.quantity!).toString()}",
-                          style: const TextStyle(
-                              color: Colors.white70),
+                          style: const TextStyle(color: Colors.white70),
                         ),
                         trailing: IconButton(
                             style: ButtonStyle(
@@ -321,18 +321,18 @@ class _BillPage extends State<BillPage> {
                         ])),
               ),
               const SizedBox(
-                height: 30,
+                height: 20,
               ),
               Visibility(
                   visible: productList.isNotEmpty,
                   child: Row(
                     children: [
-                      const Text(
-                        'Payment Mode: ',
-                        style: TextStyle(fontSize: 20),
-                      ),
-                      const SizedBox(
-                        width: 0,
+                      const Padding(
+                        padding: EdgeInsets.all(5.0),
+                        child: Text(
+                          'Payment Mode: ',
+                          style: TextStyle(fontSize: 19),
+                        ),
                       ),
                       Expanded(
                         child: RadioListTile<String>(
@@ -370,7 +370,7 @@ class _BillPage extends State<BillPage> {
                     ],
                   )),
               const SizedBox(
-                height: 50,
+                height: 20,
               ),
               Row(
                 children: [
@@ -432,6 +432,7 @@ class _BillPage extends State<BillPage> {
                                     currentbill.id!,
                                     productList,
                                     total,
+
                                     DateTime.now().toString(),
                                     mop);
                                 setState(() {
@@ -472,6 +473,27 @@ class _BillPage extends State<BillPage> {
                               }
                             }),
                       )),
+                  Visibility(
+                    visible: billgenerated &&
+                        productList.isNotEmpty &&
+                        !enableUpdate,
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        createjsondata();
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PrintPage(
+                                    billdata: jsondata,
+                                    totalcost: cost.toString(),
+                                    title:title!,
+                                    date: DateTime.now().toString(),
+                                    mop: mop)));
+                      },
+                      icon: const Icon(Icons.print),
+                      label: const Text("Print"),
+                    ),
+                  ),
                   Visibility(
                       visible: billgenerated && productList.isNotEmpty,
                       child: Padding(
@@ -549,41 +571,13 @@ class _BillPage extends State<BillPage> {
             ));
   }
 
-  // Widget getsearchabledropdown() {
-  //   return SearchableDropdown(
-  //       items: prodlist
-  //           .map((e) => DropdownMenuItem(
-  //                   child: ListTile(
-  //                 title: Text(e.name),
-  //               )))
-  //           .toList(),
-  //       onChanged: () {});
-  // }
+  void createjsondata() {
+    for (int i = 0; i < currentbill.products.length; i++) {
+      jsondata.add({
+        'product': currentbill.products[i].name,
+        'price': currentbill.products[i].price,
+        'quantity': currentbill.products[i].quantity
+      });
+    }
+  }
 }
-// DropdownButtonHideUnderline(
-//                                 child: DropdownButton<Product>(
-//                                   value: productValue,
-//                                   items: prodlist
-//                                       .map((prod) => DropdownMenuItem<Product>(
-//                                           value: prod,
-//                                           child: RichText(
-//                                             text: TextSpan(
-//                                                 text: prod.name[0],
-//                                                 style: const TextStyle(color: Colors.black,
-//                                                     fontWeight:
-//                                                         FontWeight.bold),
-//                                                 children: [
-//                                                   TextSpan(
-//                                                       text: prod.name
-//                                                           .substring(1),
-//                                                       style: const TextStyle(color: Colors.black,
-//                                                           fontWeight: FontWeight
-//                                                               .normal))
-//                                                 ]),
-//                                           )))
-//                                       .toList(),
-//                                   onChanged: ((value) => setState(() {
-//                                         productValue = value;
-//                                       })),
-//                                 ),
-//                               ),

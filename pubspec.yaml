@@ -32,17 +32,19 @@ dependencies:
   intl: ^0.17.0
   shared_preferences: ^2.0.15
   dropdown_search: ^3.0.1
-
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
   firebase_auth: ^3.6.3
   cloud_firestore: ^3.4.4
   firebase_core: ^1.21.0
   firebase_core_web: ^1.7.1
   firebase_auth_web: ^4.2.3
+  # The plugin below helps to scan for bluetooth devices and connect with them to print receipts.
+  bluetooth_print: ^4.3.0
 
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
+  cupertino_icons: ^1.0.2
+  
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter

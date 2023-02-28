@@ -94,7 +94,11 @@ class _HomePage extends State<HomePage> {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      BillPage(bill: bill)));
+                                                      BillPage(
+                                                        bill: bill,
+                                                        index:
+                                                            'Bill #  ${billList.length - billList.indexOf(bill)}',
+                                                      )));
                                         },
                                       ),
                                       const Divider(color: Colors.grey)
